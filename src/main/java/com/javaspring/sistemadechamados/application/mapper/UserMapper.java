@@ -12,10 +12,7 @@ import com.javaspring.sistemadechamados.domain.serviceports.CompanyService;
 @Component
 public class UserMapper {
 
-    private final CompanyService companyService;
-    public UserMapper(CompanyService companyService) {
-        this.companyService = companyService;
-    }
+    
     // Converte User para UserResponseDTO
     public UserResponseDTO toResponseDTO(User user) {
     
@@ -38,16 +35,8 @@ public class UserMapper {
         user.setEmail(requestDTO.email());
         user.setPassword(requestDTO.password());
         user.setRole(requestDTO.role());
-        Company company = companyService.getCompanyById(requestDTO.companyId()).orElseThrow(() -> new RuntimeException("Company not found"));
-        user.setCompany(company); 
- 
- //       user.setCompanies(null);  
-   //     user.setTicketsCreated(null); 
-     //   user.setTicketsAssigned(null);  
-
         return user;
     }
-
  
 /* 
     private List<CompanyResponseDTO> mapCompaniesToDTOs(List<Company> companies) {

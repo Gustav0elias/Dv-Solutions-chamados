@@ -9,27 +9,35 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import com.javaspring.sistemadechamados.domain.model.Company;
 import com.javaspring.sistemadechamados.domain.model.User;
 import com.javaspring.sistemadechamados.domain.repositoryports.UserRepository;
+import com.javaspring.sistemadechamados.infrastructure.persistence.entity.CompanyEntity;
 import com.javaspring.sistemadechamados.infrastructure.persistence.entity.UserEntity;
 import com.javaspring.sistemadechamados.infrastructure.persistence.repositoryjpa.UserRepositoryJpa;
 import com.javaspring.sistemadechamados.web.exception.BusinessException;
 import com.javaspring.sistemadechamados.web.exception.ResourceNotFoundException;
+import com.javaspring.sistemadechamados.domain.serviceports.CompanyService;
 
 @Component
 public class UserRepositoryImpl implements UserRepository {
     private final UserRepositoryJpa userRepositoryJpa;
     private final ModelMapper modelMapper;
-    public UserRepositoryImpl(UserRepositoryJpa userRepositoryJpa, ModelMapper modelMapper) {
+    private final CompanyService companyService;
+    public UserRepositoryImpl(UserRepositoryJpa userRepositoryJpa, ModelMapper modelMapper, CompanyService companyService) {
         this.userRepositoryJpa = userRepositoryJpa;
         this.modelMapper = modelMapper;
+        this.companyService = companyService;
     }
     @Override
     public User createUser(User user) {
         userRepositoryJpa.findByEmail(user.getEmail()).ifPresent(existingUser-> {
             throw new BusinessException("Email already registered in the system");
         });
+        Company company = companyService.getCompanyById(user.getCompany().getId());
+        CompanyEntity companyEntity = modelMapper.map(company, CompanyEntity.class);
        UserEntity userEntity = modelMapper.map(user, UserEntity.class);
+       userEntity.setCompany(companyEntity);
        UserEntity userEntitySaved = userRepositoryJpa.save(userEntity);
        return modelMapper.map(userEntitySaved, User.class);
     }

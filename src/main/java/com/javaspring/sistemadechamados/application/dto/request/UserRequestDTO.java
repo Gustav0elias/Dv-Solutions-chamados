@@ -21,8 +21,7 @@ public record UserRequestDTO(
 
     @NotNull(message = "Password must not be null")
     @Size(min = 8, message = "Password must be at least 8 characters long")
-    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).+", message = "Password must contain at least one letter, one number, and one special character")
-    String password,
+     String password,
 
     @NotNull(message = "Role must not be null")
     Role role,
