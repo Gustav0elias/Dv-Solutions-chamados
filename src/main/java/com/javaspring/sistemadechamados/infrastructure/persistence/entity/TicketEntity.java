@@ -49,7 +49,7 @@ public class TicketEntity {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private CompanyEntity company;
-    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "ticket" )
     private List <CommentEntity> comments;
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
     private List <AttachmentEntity> attachments;

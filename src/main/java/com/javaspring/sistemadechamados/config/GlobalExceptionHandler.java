@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -54,6 +55,14 @@ public class GlobalExceptionHandler {
         logger.info("Internal error: " + e.getMessage());
         return new ResponseEntity<>(new ErrorResponseDTO(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), LocalDateTime.now()), HttpStatus.INTERNAL_SERVER_ERROR);
 
+
+
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<String> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        logger.info("Failed to deserialize JSON: " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid JSON format");
     }
 
     }
