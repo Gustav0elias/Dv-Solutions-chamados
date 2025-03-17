@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.javaspring.sistemadechamados.application.enums.Role;
 import com.javaspring.sistemadechamados.domain.model.User;
 import com.javaspring.sistemadechamados.domain.repositoryports.UserRepository;
 import com.javaspring.sistemadechamados.domain.serviceports.UserService;
@@ -41,6 +42,16 @@ public class UserServiceImpl implements UserService {
         User existingUser = getUserById(id);
         userRepository.deleteUser(id);
     }
+    @Override
+    public boolean userTechnicianExists(UUID id) {
+        User user = getUserById(id);
+
+        if (user.getRole() != Role.TECHNICIAN ){
+            throw new ResourceNotFoundException("User not Technician");
+        }
+        return true;
+    }
+    
 
 
 }
