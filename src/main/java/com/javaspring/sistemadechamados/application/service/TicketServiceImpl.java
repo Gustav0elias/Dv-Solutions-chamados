@@ -10,10 +10,12 @@ import org.springframework.data.domain.Pageable;
 import com.javaspring.sistemadechamados.application.enums.TicketStatus;
 import com.javaspring.sistemadechamados.domain.model.Company;
 import com.javaspring.sistemadechamados.domain.model.Ticket;
+import com.javaspring.sistemadechamados.domain.model.User;
 import com.javaspring.sistemadechamados.domain.repositoryports.CompanyRepository;
 import com.javaspring.sistemadechamados.domain.repositoryports.TicketRepository;
 import com.javaspring.sistemadechamados.domain.serviceports.CompanyService;
 import com.javaspring.sistemadechamados.domain.serviceports.TicketService;
+import com.javaspring.sistemadechamados.domain.serviceports.UserService;
 
 
  
@@ -22,10 +24,12 @@ public class TicketServiceImpl implements TicketService {
     private static final Logger logger = LoggerFactory.getLogger(TicketServiceImpl.class);
     private final TicketRepository ticketRepository;
     private final CompanyRepository companyRepository;
+    private final UserService userService;
 
-    public TicketServiceImpl(TicketRepository ticketRepository, CompanyRepository companyRepository) {
+    public TicketServiceImpl(TicketRepository ticketRepository, CompanyRepository companyRepository, UserService userService) {
         this.ticketRepository = ticketRepository;
         this.companyRepository = companyRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -71,6 +75,7 @@ public class TicketServiceImpl implements TicketService {
     public Ticket attendTicket(UUID ticketId, UUID responsibleUserId) {
         logger.info("Attending ticket with id: {}", ticketId);
 
+        userService.userTechnicianExists(responsibleUserId);
         Ticket existingTicket = getTicketById(ticketId);  
         validateTicketStatus(existingTicket, TicketStatus.OPEN);  
 
@@ -83,7 +88,7 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public Ticket closeTicket(UUID ticketId, UUID responsibleUserId) {
         logger.info("Closing ticket with id: {}", ticketId);
-
+        userService.userTechnicianExists(responsibleUserId);
         Ticket existingTicket = getTicketById(ticketId);  
         validateTicketStatus(existingTicket, TicketStatus.IN_PROGRESS); 
 

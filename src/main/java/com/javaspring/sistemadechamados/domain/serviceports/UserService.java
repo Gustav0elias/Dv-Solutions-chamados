@@ -16,5 +16,6 @@ public interface UserService {
   public Page<User> getAllUsers(Pageable pageable);
   public User updateUser(UUID id, User user);
   public void deleteUser(UUID id);
+  public boolean userTechnicianExists(UUID id);
   
 }  
